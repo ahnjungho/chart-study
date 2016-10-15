@@ -10,17 +10,48 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
   </head>
   <body>
-    <h1>candlestick</h1>
 
+    <div class="container">
+      <a href="/">home</a>
+      <h1>candlestick</h1>
+
+      <div class="chart" style="height:750px; border: 1px solid #ccc"></div>
+    </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
     <script type="text/javascript" src="/bundle.js"></script>
     <script type="text/javascript">
-      var x = new charts.CandlestickChart();
+      var chart = new charts.CandlestickChart({
+        'bindto': '.chart',
+      });
+
+      var today = new Date();
+      console.log(today);
+      var dataLength = 30;
+      var startValue = Math.round(Math.random() * 10000) + 1;
+
+      var dataArr = [];
+      for (var i = 0; i < dataLength; i++) {
+        dataArr.push({
+          'date': new Date(new Date().setDate(new Date().getDate()- dataLength + i)),
+          'open': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
+          'close': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
+          'low': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
+          'high': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
+        })
+      }
+
+      chart.loadData(dataArr);
+
+      function getRandomValue(num) {
+        return Math.round(num  * (Math.round(Math.random() * 60) + 70) / 100);
+      }
 
 
     </script>
