@@ -5,4 +5,5 @@
 
 ```
 $ yarn install
+$ npm run watch
 ```

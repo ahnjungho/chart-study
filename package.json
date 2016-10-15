@@ -6,6 +6,10 @@
     "url": "git@github.com:ahnjungho/chart-study.git",
     "type": "git"
   },
+  "scripts": {
+    "build": "./node_modules/rollup/bin/rollup -c",
+    "watch": "./node_modules/rollup/bin/rollup -c -w"
+  },
   "author": "Ahn Jungho <ahnjungho@ahnjungho.org>",
   "license": "MIT",
   "dependencies": {
