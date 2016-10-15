@@ -49,8 +49,18 @@ class CandlestickChart {
       .append('rect')
       .attr('x', (o) => this.xScale(o.date) - this.candleWidth/2)
       .attr('y', (o) => this.yScale(Math.min(o.open, o.close)))
-      .attr('height', (o) => this.yScale(Math.max(o.open, o.close)) - this.yScale(Math.min(o.open, o.close)))
-      .attr('width', this.candleWidth);
+      .attr('height', (o) => this.yScale(Math.max(o.open, o.close)) - this.yScale(Math.min(o.open, o.close)) + 1)
+      .attr('width', this.candleWidth)
+      .style('fill', (o) => o.open > o.close ? 'blue' : 'red');
+
+    this.chartGroup.selectAll('.candle-line').data(this.dataset, (o) => o.date)
+      .enter()
+      .append('line')
+      .attr('x1', (o) => this.xScale(o.date))
+      .attr('x2', (o) => this.xScale(o.date))
+      .attr('y1', (o) => this.yScale(o.low))
+      .attr('y2', (o) => this.yScale(o.high))
+      .attr("stroke", (o) => o.open > o.close ? 'blue' : 'red');
   }
 
   loadData(dataset) {

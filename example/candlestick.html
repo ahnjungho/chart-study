@@ -15,7 +15,7 @@
       <a href="/">home</a>
       <h1>candlestick</h1>
 
-      <div class="chart" style="height:750px; border: 1px solid #ccc"></div>
+      <div class="chart" style="height:450px; border: 1px solid #ccc"></div>
     </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
@@ -33,24 +33,37 @@
 
       var today = new Date();
       console.log(today);
-      var dataLength = 30;
+      var dataLength = 60;
       var startValue = Math.round(Math.random() * 10000) + 1;
 
       var dataArr = [];
+      var temp = {};
       for (var i = 0; i < dataLength; i++) {
-        dataArr.push({
-          'date': new Date(new Date().setDate(new Date().getDate()- dataLength + i)),
-          'open': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
-          'close': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
-          'low': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
-          'high': i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close),
-        })
+        temp = getStockData(i === 0 ? getRandomValue(startValue) : getRandomValue(dataArr[i-1].close));
+        temp.date = new Date(new Date().setDate(new Date().getDate()- dataLength + i));
+        dataArr.push(temp);
       }
 
       chart.loadData(dataArr);
 
       function getRandomValue(num) {
         return Math.round(num  * (Math.round(Math.random() * 60) + 70) / 100);
+      }
+
+      function getStockData(prev) {
+        var r = {};
+        while(true) {
+          r = {
+            'open': getRandomValue(prev),
+            'close': getRandomValue(prev),
+            'low': getRandomValue(prev),
+            'high': getRandomValue(prev)
+          }
+          if ((Math.min(r.open, r.close) >= r.low) && (Math.max(r.open, r.close) <= r.high)) {
+            break;
+          }
+        }
+        return r
       }
 
 
