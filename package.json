@@ -1,0 +1,19 @@
+{
+  "name": "chart-study",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:ahnjungho/chart-study.git",
+    "type": "git"
+  },
+  "author": "Ahn Jungho <ahnjungho@ahnjungho.org>",
+  "license": "MIT",
+  "dependencies": {
+    "babel-preset-es2015-rollup": "^1.2.0",
+    "d3": "^4.2.7",
+    "rollup": "^0.36.3",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-json": "^2.0.2",
+    "rollup-watch": "^2.5.0"
+  }
+}
