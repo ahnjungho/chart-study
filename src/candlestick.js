@@ -55,6 +55,17 @@ class CandlestickChart {
       .attr('width', this.width)
       .attr('height', this.height)
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+
+    this.tooltip = this.selectChart
+      .append("div")
+      .attr("class", "candlestic-tooltip")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("opacity", 0)
+      .style("border", "1px solid #aaa")
+      .style("background-color", "#fff")
+      .style("font-size", "12px")
+      .style("padding", "3px");
   }
 
   drawAxis() {
@@ -100,6 +111,9 @@ class CandlestickChart {
     this.chartGroup.selectAll('.candle-rect').data(this.dataset, (o) => o.date)
       .enter()
       .append('rect')
+      .on("mouseover", this.mouseOver(this.tooltip))
+      .on("mousemove", this.mouseMove(this.tooltip))
+      .on("mouseout", this.mouseOut(this.tooltip))
       .transition()
       .duration(500)
       .on("start", function() {
@@ -110,7 +124,7 @@ class CandlestickChart {
           .attr('height', 0);
       })
       .attr('x', (o) => this.xScale(o.date))
-      .attr('y', (o) => this.yScale(Math.min(o.open, o.close)))
+      .attr('y', (o) => this.yScale(Math.max(o.open, o.close)))
       .attr('height', (o) => this.yScale(Math.min(o.open, o.close)) - this.yScale(Math.max(o.open, o.close)) + 1)
       .attr('width', this.candleWidth)
       .style('fill', (o) => o.open > o.close ? 'blue' : 'red');
@@ -133,6 +147,32 @@ class CandlestickChart {
       .attr('y1', (o) => this.yScale(o.low))
       .attr('y2', (o) => this.yScale(o.high))
       .attr("stroke", (o) => o.open > o.close ? 'blue' : 'red');
+  }
+
+  mouseOver(tooltip) {
+    var that = this;
+    return function (d, i) {
+      var openRate = i === 0 ? 0 : ((d.open - that.dataset[i-1].close)/that.dataset[i-1].close * 100).toFixed(2);
+      var closeRate = i === 0 ? 0 : ((d.close - that.dataset[i-1].close)/that.dataset[i-1].close * 100).toFixed(2);
+      var lowRate = i === 0 ? 0 : ((d.low - that.dataset[i-1].close)/that.dataset[i-1].close * 100).toFixed(2);
+      var highRate = i === 0 ? 0 : ((d.high - that.dataset[i-1].close)/that.dataset[i-1].close * 100).toFixed(2);
+      var html = `${d.date.toString().split(' ', 4).join(' ')}
+                  <br>open: ${d.open}(${openRate}%)
+                  <br>close: ${d.close}(${closeRate}%)
+                  <br>high: ${d.high}(${highRate}%)
+                  <br>low: ${d.low}(${lowRate}%)
+                  `;
+      tooltip.html(html);
+      return tooltip.transition().duration(10).style("opacity", 1);
+    }
+  }
+
+  mouseMove(tooltip) {
+    return () => tooltip.style("top", (d3.event.pageY-10)+"px").style("left", (d3.event.pageX+10)+"px");
+  }
+
+  mouseOut(tooltip) {
+    return () => tooltip.transition().duration(10).style("opacity", 0);
   }
 
   loadData(dataset) {
