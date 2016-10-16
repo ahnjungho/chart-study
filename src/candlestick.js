@@ -96,9 +96,19 @@ class CandlestickChart {
   }
 
   drawCandles() {
+    var that = this;
     this.chartGroup.selectAll('.candle-rect').data(this.dataset, (o) => o.date)
       .enter()
       .append('rect')
+      .transition()
+      .duration(500)
+      .on("start", function() {
+        d3.select(this)
+          .attr('x', (o) => that.xScale(o.date))
+          .attr('y', (o) => that.yScale(o.open))
+          .attr('width', that.candleWidth)
+          .attr('height', 0);
+      })
       .attr('x', (o) => this.xScale(o.date))
       .attr('y', (o) => this.yScale(Math.min(o.open, o.close)))
       .attr('height', (o) => this.yScale(Math.min(o.open, o.close)) - this.yScale(Math.max(o.open, o.close)) + 1)
@@ -108,6 +118,16 @@ class CandlestickChart {
     this.chartGroup.selectAll('.candle-line').data(this.dataset, (o) => o.date)
       .enter()
       .append('line')
+      .transition()
+      .duration(500)
+      .on("start", function() {
+        d3.select(this)
+          .attr('x1', (o) => that.xScale(o.date) + that.candleWidth/2)
+          .attr('x2', (o) => that.xScale(o.date) + that.candleWidth/2)
+          .attr('y1', (o) => that.yScale(o.open))
+          .attr('y2', (o) => that.yScale(o.open))
+          .attr("stroke", (o) => o.open > o.close ? 'blue' : 'red');
+      })
       .attr('x1', (o) => this.xScale(o.date) + this.candleWidth/2)
       .attr('x2', (o) => this.xScale(o.date) + this.candleWidth/2)
       .attr('y1', (o) => this.yScale(o.low))
