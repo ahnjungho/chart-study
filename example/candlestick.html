@@ -31,7 +31,7 @@
         'bindto': '.chart',
       });
 
-      var today = new Date();
+      var today = new Date().setHours(0,0,0,0);
       console.log(today);
       var dataLength = 90;
       var startValue = Math.round(Math.random() * 10000) + 1000;
@@ -40,7 +40,7 @@
       var temp = {};
       for (var i = 0; i < dataLength; i++) {
         temp = i === 0 ? getStockData(startValue) : getStockData(dataArr[i-1].close);
-        temp.date = new Date(new Date().setDate(new Date().getDate()- dataLength + i));
+        temp.date = new Date(today + 1000 * 60 * 60 * 24 * (- dataLength + i));
         dataArr.push(temp);
       }
 

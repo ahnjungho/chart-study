@@ -18,10 +18,12 @@ class CandlestickChart {
   }
 
   updateParams() {
+    var tempStartDate = this.dataset[0].date.getTime();
+    var startDate = new Date(tempStartDate).setDate(new Date(tempStartDate).getDate() - 1);
     var tempEndDate = this.dataset[this.dataset.length - 1].date.getTime();
     var endDate = new Date(tempEndDate).setDate(new Date(tempEndDate).getDate() + 1);
     this.xScale = d3.scaleTime()
-      .domain([this.dataset[0].date, endDate])
+      .domain([startDate, endDate])
       .range([0, this.width]);
 
     this.yScale = d3.scaleLinear()
@@ -115,14 +117,14 @@ class CandlestickChart {
       .duration(500)
       .on("start", function() {
         d3.select(this)
-          .attr('x1', (o) => that.xScale(o.date) + that.candleWidth/2)
-          .attr('x2', (o) => that.xScale(o.date) + that.candleWidth/2)
+          .attr('x1', (o) => that.xScale(o.date))
+          .attr('x2', (o) => that.xScale(o.date))
           .attr('y1', (o) => that.yScale(o.open))
           .attr('y2', (o) => that.yScale(o.open))
           .attr("stroke", (o) => o.open > o.close ? 'blue' : 'red');
       })
-      .attr('x1', (o) => this.xScale(o.date) + this.candleWidth/2)
-      .attr('x2', (o) => this.xScale(o.date) + this.candleWidth/2)
+      .attr('x1', (o) => this.xScale(o.date))
+      .attr('x2', (o) => this.xScale(o.date))
       .attr('y1', (o) => this.yScale(o.low))
       .attr('y2', (o) => this.yScale(o.high))
       .attr("stroke", (o) => o.open > o.close ? 'blue' : 'red');
@@ -137,12 +139,12 @@ class CandlestickChart {
       .duration(500)
       .on("start", function() {
         d3.select(this)
-          .attr('x', (o) => that.xScale(o.date))
+          .attr('x', (o) => that.xScale(o.date) - that.candleWidth/2)
           .attr('y', (o) => that.yScale(o.open))
           .attr('width', that.candleWidth)
           .attr('height', 0);
       })
-      .attr('x', (o) => this.xScale(o.date))
+      .attr('x', (o) => this.xScale(o.date) - this.candleWidth/2)
       .attr('y', (o) => this.yScale(Math.max(o.open, o.close)))
       .attr('height', (o) => this.yScale(Math.min(o.open, o.close)) - this.yScale(Math.max(o.open, o.close)) + 1)
       .attr('width', this.candleWidth)
