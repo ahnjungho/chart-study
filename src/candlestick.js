@@ -15,6 +15,7 @@ class CandlestickChart {
     this.margin = this.config.margin || {top: 30, right: 60, bottom: 30, left: 60};
     this.width = this.targetElement.getBoundingClientRect().width - this.margin.left - this.margin.right;
     this.height = this.targetElement.getBoundingClientRect().height - this.margin.top - this.margin.bottom;
+    this.movingAverageLineDays = [5, 20, 60, 120, 240];
   }
 
   updateParams() {
@@ -54,6 +55,12 @@ class CandlestickChart {
 
     this.chartGroup = this.svg.append("g")
       .attr('class', 'chart-group')
+      .attr('width', this.width)
+      .attr('height', this.height)
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+
+    this.movingAverageLineGroup = this.svg.append("g")
+      .attr('class', 'moving-average-line-group')
       .attr('width', this.width)
       .attr('height', this.height)
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
@@ -151,6 +158,24 @@ class CandlestickChart {
       .style('fill', (o) => o.open > o.close ? 'blue' : 'red');
   }
 
+  drawMovingAverageLines() {
+    var that = this;
+    var line = d3.line()
+      .x((d) => this.xScale(d.date))
+      .y((d) => this.yScale(d.value));
+
+    this.movingAverageLineDays.forEach(function(day){
+      if (day < that.dataset.length){
+        that.movingAverageLineGroup
+          .append('path')
+          .datum(that.getMovingAverageData(that.dataset, day))
+          .attr('d', line)
+          .attr('fill', 'None')
+          .style('stroke', 'steelblue');
+      }
+    })
+  }
+
   mouseOver(tooltip) {
     var that = this;
     return function (d, i) {
@@ -177,6 +202,17 @@ class CandlestickChart {
     return () => tooltip.transition().duration(10).style("opacity", 0);
   }
 
+  getMovingAverageData(dataset, n) {
+    var r = [];
+    for (var i = n-1; i < dataset.length; i++) {
+      r.push({
+        date: dataset[i].date,
+        value: dataset.filter((o, index) => index >= i-(n-1) && index <= i).map((o) => o.close).reduce((a,b) => a+b)/n
+      });
+    }
+    return r;
+  }
+
   loadData(dataset) {
     console.log(dataset);
     this.dataset = dataset;
@@ -184,6 +220,7 @@ class CandlestickChart {
     this.drawAxis();
     this.drawGridLines();
     this.drawCandles();
+    this.drawMovingAverageLines();
   }
 }
 
