@@ -16,6 +16,7 @@ class CandlestickChart {
     this.width = this.targetElement.getBoundingClientRect().width - this.margin.left - this.margin.right;
     this.height = this.targetElement.getBoundingClientRect().height - this.margin.top - this.margin.bottom;
     this.movingAverageLineDays = [5, 20, 60, 120, 240];
+    this.movingAverageLineColors = ['green', 'red', 'blue', 'orange', 'black'];
   }
 
   updateParams() {
@@ -171,7 +172,7 @@ class CandlestickChart {
           .datum(that.getMovingAverageData(that.dataset, day))
           .attr('d', line)
           .attr('fill', 'None')
-          .style('stroke', 'steelblue');
+          .style('stroke', that.movingAverageLineColors[that.movingAverageLineDays.indexOf(day)]);
       }
     })
   }
