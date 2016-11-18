@@ -2,14 +2,12 @@ import * as d3 from "d3";
 
 class CandlestickChart {
   constructor(config) {
-    console.log('init CandlestickChart');
     this.config = config;
     this.initParams();
     this.initChart();
   }
 
   initParams() {
-    console.log("initParams");
     this.selectChart = d3.select(this.config.bindto);
     this.targetElement = this.selectChart.node();
     this.margin = this.config.margin || {top: 30, right: 60, bottom: 30, left: 60};
@@ -36,7 +34,6 @@ class CandlestickChart {
   }
 
   initChart() {
-    console.log("initChart");
     this.svg = d3.select(this.config.bindto).append('svg')
       .attr("width", this.width + this.margin.left + this.margin.right)
       .attr("height", this.height + this.margin.top + this.margin.bottom)
@@ -178,7 +175,7 @@ class CandlestickChart {
   }
 
   mouseOver(tooltip) {
-    var that = this;
+    var that = this ;
     return function (d, i) {
       var openRate = i === 0 ? 0 : ((d.open - that.dataset[i-1].close)/that.dataset[i-1].close * 100).toFixed(2);
       var closeRate = i === 0 ? 0 : ((d.close - that.dataset[i-1].close)/that.dataset[i-1].close * 100).toFixed(2);
@@ -215,7 +212,6 @@ class CandlestickChart {
   }
 
   loadData(dataset) {
-    console.log(dataset);
     this.dataset = dataset;
     this.updateParams();
     this.drawAxis();
