@@ -5,9 +5,14 @@ export default {
   entry: './entry.js',
   format: 'iife',
   moduleName: 'charts',
-  plugins: [ json(), babel() ],
+  plugins: [
+    json(),
+    babel({
+      babelrc: false
+    })
+  ],
   dest: './bundle.js',
   globals: {
     d3: 'd3',
-  }
+  },
 };

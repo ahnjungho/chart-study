@@ -7,14 +7,17 @@
     "type": "git"
   },
   "scripts": {
+    "test": "jest --coverage",
     "build": "./node_modules/rollup/bin/rollup -c",
-    "watch": "./node_modules/rollup/bin/rollup -c -w"
+    "watch": "./node_modules/rollup/bin/rollup -c -w -g d3"
   },
   "author": "Ahn Jungho <ahnjungho@ahnjungho.org>",
   "license": "MIT",
   "dependencies": {
-    "babel-preset-es2015-rollup": "^1.2.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
     "d3": "^4.2.7",
+    "jest": "^17.0.3",
     "rollup": "^0.36.3",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-json": "^2.0.2",
