@@ -12,6 +12,10 @@
     "watch": "./node_modules/rollup/bin/rollup -c -w -g d3",
     "lint": "eslint src; exit 0"
   },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": ["src/*.js"]
+  },
   "author": "Ahn Jungho <ahnjungho@ahnjungho.org>",
   "license": "MIT",
   "dependencies": {
